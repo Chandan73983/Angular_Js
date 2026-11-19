@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html ng-app="feedbackApp">
+<head>
+    <title>Contact Us Form</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .form-box {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea {
+            resize: vertical;
+            height: 80px;
+        }
+        .error-msg {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+        .success-box {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #a0c4ff;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-controller="feedbackCtrl" class="form-box">
+
+    <h2>Contact Us</h2>
+
+    <form name="contactForm" ng-submit="submitForm()" novalidate>
+
+        <!-- Name Input -->
+        <label>Name:</label>
+        <input type="text" 
+               name="cName" 
+               ng-model="formData.name" 
+               required>
+        <span class="error-msg" ng-if="contactForm.cName.$touched && contactForm.cName.$invalid">
+            * Name is required.
+        </span>
+
+        <!-- Email Input (Specific validation) -->
+        <label>Email:</label>
+        <input type="email" 
+               name="cEmail" 
+               ng-model="formData.email" 
+               required>
+        <!-- Check specific error: Agar required nahi hai vs Agar email format galat hai -->
+        <span class="error-msg" ng-if="contactForm.cEmail.$touched && contactForm.cEmail.$error.required">
+            * Email is required.
+        </span>
+        <span class="error-msg" ng-if="contactForm.cEmail.$touched && contactForm.cEmail.$error.email">
+            * Please enter a valid email.
+        </span>
+
+        <!-- Dropdown Select -->
+        <label>Subject:</label>
+        <select name="cSubject" ng-model="formData.subject" required>
+            <option value="">-- Select Subject --</option>
+            <option value="Complaint">Complaint</option>
+            <option value="Feedback">Feedback</option>
+            <option value="Query">General Query</option>
+        </select>
+        <span class="error-msg" ng-if="contactForm.cSubject.$touched && contactForm.cSubject.$invalid">
+            * Please select a subject.
+        </span>
+
+        <!-- Textarea -->
+        <label>Message:</label>
+        <textarea name="cMessage" 
+                  ng-model="formData.message" 
+                  required 
+                  ng-minlength="10"></textarea>
+        <span class="error-msg" ng-if="contactForm.cMessage.$touched && contactForm.cMessage.$invalid">
+            * Message must be at least 10 characters.
+        </span>
+
+        <!-- Submit Button -->
+        <button type="submit" ng-disabled="contactForm.$invalid">
+            Send Message
+        </button>
+
+    </form>
+
+    <!-- Success Message (Jab form valid hoga) -->
+    <div class="success-box" ng-if="isSubmitted">
+        <strong>Success!</strong> Thank you {{ formData.name }}. Your message regarding "{{ formData.subject }}" has been sent.
+    </div>
+
+</div>
+
+<script>
+    var app = angular.module("feedbackApp", []);
+
+    app.controller("feedbackCtrl", function($scope) {
+        
+        // Form ka data model
+        $scope.formData = {};
+        $scope.isSubmitted = false;
+
+        // Submit function
+        $scope.submitForm = function() {
+            if ($scope.contactForm.$valid) {
+                $scope.isSubmitted = true; // Success box show karo
+                // Yahan aap API call kar sakte ho data save karne ke liye
+            }
+        };
+    });
+</script>
+
+</body>
+</html>

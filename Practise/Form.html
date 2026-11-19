@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="loginApp">
+<head>
+    <title>Simple Login Form</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .login-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 350px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            width: 90%;
+        }
+        .error {
+            color: red;
+            font-size: 13px;
+            margin: 0 0 10px 0;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-controller="loginCtrl" class="login-box">
+
+    <h2>Login</h2>
+
+    <!-- ng-submit form submit hone par login() function ko call karega -->
+    <form name="loginForm" ng-submit="doLogin()" novalidate>
+
+        <label>Username:</label><br>
+        <!-- Validation: required aur kam se kam 4 letters -->
+        <input type="text" 
+               name="username" 
+               ng-model="loginData.username" 
+               required 
+               ng-minlength="4">
+
+        <!-- Error message tabhi dikhega jab user click karke bahar aayega (touched) aur input galat hoga (invalid) -->
+        <p class="error" ng-if="loginForm.username.$touched && loginForm.username.$invalid">
+            Username is required (Min 4 characters).
+        </p>
+
+        <label>Password:</label><br>
+        <!-- Validation: required aur kam se kam 6 letters -->
+        <input type="password" 
+               name="password" 
+               ng-model="loginData.password" 
+               required 
+               ng-minlength="6">
+
+        <p class="error" ng-if="loginForm.password.$touched && loginForm.password.$invalid">
+            Password is required (Min 6 characters).
+        </p>
+
+        <!-- Button tabhi enable hoga jab form valid hoga -->
+        <button type="submit" ng-disabled="loginForm.$invalid">
+            Login Now
+        </button>
+
+    </form>
+
+    <!-- Success Message -->
+    <p class="success">{{ loginMessage }}</p>
+
+</div>
+
+<script>
+    var app = angular.module("loginApp", []);
+
+    app.controller("loginCtrl", function($scope) {
+        
+        // Data model initialize kiya
+        $scope.loginData = {};
+        $scope.loginMessage = "";
+
+        // Jab form valid hoga tab yeh function chalega
+        $scope.doLogin = function() {
+            if ($scope.loginForm.$valid) {
+                // Yahan aap condition laga sakte ho (jaise admin/user check)
+                $scope.loginMessage = "Login Successful! Welcome " + $scope.loginData.username;
+            }
+        };
+    });
+</script>
+
+</body>
+</html>

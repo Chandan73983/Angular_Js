@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mylist">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <title>Nested List Design</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .list-container { background-color: #ffffff; width: 100%; max-width: 600px; padding: 30px 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border-top: 5px solid #4F46E5; }
+        .list-container h2 { color: #1f2937; margin-bottom: 20px; text-align: center; font-size: 24px; }
+        
+        
+        ul.main-list { list-style: none; }
+        ul.main-list > li { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px; padding: 10px 15px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #4F46E5; transition: all 0.3s ease; cursor: pointer; }
+        ul.main-list > li:hover { background-color: #eef2ff; transform: translateX(5px); }
+        
+        
+        ul.nested-list { list-style-type: none; margin-top: 10px; margin-left: 15px; border-left: 2px dashed #cbd5e1; padding-left: 15px; }
+        ul.nested-list li { font-size: 15px; font-weight: normal; color: #475569; margin-bottom: 8px; position: relative; padding-left: 20px; line-height: 1.5; }
+        ul.nested-list li::before { content: "👉"; position: absolute; left: 0; top: 0; font-size: 12px; color: #4F46E5; }
+    </style>
+</head>
+
+<body>
+   
+    <div class="list-container" ng-controller="listcontroller">
+        <h2>🚀 Full Stack Roadmap</h2>
+        
+        <ul class="main-list">
+            
+            <li ng-repeat="product in products">
+                {{ product.title }}
+              
+                <ul class="nested-list">
+                    <li ng-repeat="subItem in product.subItems">
+                        {{ subItem }}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+       
+        var app = angular.module('mylist', []);
+        
+      
+        app.controller('listcontroller', function($scope) {
+            $scope.products = [
+                { title: "1. Frontend Basics", subItems: ["HTML5", "CSS3"] },
+                { title: "2. JavaScript Core", subItems: ["Variables", "Functions", "DOM"] },
+                { title: "3. Modern JavaScript", subItems: ["Arrow Functions", "Destructuring"] },
+                { title: "4. React.js", subItems: ["Components", "Props", "Hooks"] },
+                { title: "5. Backend (PHP)", subItems: ["Sessions", "File Upload"] },
+                { title: "6. MySQL Database", subItems: ["CRUD", "Joins", "PDO vs MySQLi"] },
+                { title: "7. API Integration", subItems: ["REST API", "Fetch & Async/Await"] },
+                { title: "8. Version Control", subItems: ["Git Basics", "GitHub"] },
+                { title: "9. Security", subItems: ["Password Hashing", "SQL Injection"] },
+                { title: "10. Deployment", subItems: ["cPanel", "Vercel"] }
+            ];
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMS App - Student Management</title>
+<base href="./">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+<style>
+  body { background:#f4f7f6; font-family:'Segoe UI',Arial,sans-serif; }
+  .navbar-brand { font-weight:700; }
+  .nav-link.active { background:rgba(255,255,255,.18); border-radius:6px; font-weight:600; }
+  .sidebar { background:#212529; min-height:calc(100vh - 56px); padding-top:15px; }
+  .sidebar a { color:#ddd; text-decoration:none; display:block; padding:12px 20px; }
+  .sidebar a:hover, .sidebar a.active { background:#0d6efd; color:#fff; }
+  .main-content { padding:25px; }
+  .box { background:#fff; padding:22px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.08); }
+  .stat { border-radius:10px; color:#fff; padding:20px; }
+  .toast-box { position:fixed; top:70px; right:20px; z-index:2000; }
+</style>
+</head>
+<body ng-controller="MainCtrl">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#!/home">🎓 SMS App</a>
+    <button class="navbar-toggler" type="button" ng-click="menuOpen = !menuOpen">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse" ng-class="{'collapse': !menuOpen}">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" ng-class="{active:isActive('/home')}" href="#!/home" ng-click="menuOpen=false">🏠 Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" ng-class="{active:isActive('/students')}" href="#!/students" ng-click="menuOpen=false">👨‍🎓 Students</a></li>
+        <li class="nav-item"><a class="nav-link" ng-class="{active:isActive('/add')}" href="#!/add" ng-click="menuOpen=false">➕ Add Student</a></li>
+      </ul>
+      <span class="navbar-text text-white">Total: <b>{{ count() }}</b></span>
+    </div>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast-box" ng-if="msg">
+  <div class="alert alert-success shadow">{{ msg }}</div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- SIDEBAR (desktop only) -->
+    <div class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+      <a href="#!/home" ng-class="{active:isActive('/home')}">🏠 Dashboard</a>
+      <a href="#!/students" ng-class="{active:isActive('/students')}">👨‍🎓 Student List</a>
+      <a href="#!/add" ng-class="{active:isActive('/add')}">➕ Add Student</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="col-12 col-md-9 col-lg-10 main-content">
+      <div class="box"><div ng-view></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TEMPLATES ============ -->
+<script type="text/ng-template" id="home.html">
+  <h2>Dashboard</h2>
+  <p class="text-muted">Welcome to Student Management System!</p>
+  <div class="row g-3">
+    <div class="col-sm-4"><div class="stat bg-primary"><h6>Total Students</h6><h2>{{ total }}</h2></div></div>
+    <div class="col-sm-4"><div class="stat bg-success"><h6>Total Courses</h6><h2>{{ courses }}</h2></div></div>
+    <div class="col-sm-4"><div class="stat bg-warning text-dark"><h6>Latest Student</h6><h4>{{ latest.name || '-' }}</h4></div></div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="students.html">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h2 class="mb-0">Student List</h2>
+    <input type="text" class="form-control w-auto" placeholder="🔍 Search name / course" ng-model="q">
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr><th>#</th><th>ID</th><th>Name</th><th>Course</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="s in students | filter:q">
+          <td>{{ $index + 1 }}</td><td>{{ s.id }}</td><td>{{ s.name }}</td><td>{{ s.course }}</td>
+          <td>
+            <a class="btn btn-sm btn-outline-primary" href="#!/edit/{{s.id}}">✏️ Edit</a>
+            <button class="btn btn-sm btn-outline-danger" ng-click="remove(s)">🗑️ Delete</button>
+          </td>
+        </tr>
+        <tr ng-if="(students | filter:q).length === 0">
+          <td colspan="5" class="text-center text-muted">Koi student nahi mila.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</script>
+
+<script type="text/ng-template" id="form.html">
+  <h2>{{ isEdit ? 'Edit Student' : 'Add Student' }}</h2>
+  <form name="f" ng-submit="f.$valid && save()" novalidate>
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input type="text" name="name" class="form-control" ng-model="student.name"
+             ng-minlength="3" required ng-class="{'is-invalid': f.name.$invalid && (f.name.$touched || f.$submitted)}">
+      <div class="invalid-feedback">Name kam se kam 3 characters ka hona chahiye.</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Course</label>
+      <select name="course" class="form-select" ng-model="student.course" required
+              ng-options="c for c in courseList"
+              ng-class="{'is-invalid': f.course.$invalid && (f.course.$touched || f.$submitted)}">
+        <option value="">-- Select Course --</option>
+      </select>
+      <div class="invalid-feedback">Course select karo.</div>
+    </div>
+    <button type="submit" class="btn btn-primary" ng-click="f.$setSubmitted()">{{ isEdit ? 'Update' : 'Save' }}</button>
+    <a href="#!/students" class="btn btn-secondary">Cancel</a>
+  </form>
+</script>
+
+<script>
+  var app = angular.module("myApp", ["ngRoute"]);
+
+  // FACTORY: data + localStorage
+  app.factory("DataService", function() {
+    var KEY = "sms_students";
+    var students;
+    try { students = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    if (!Array.isArray(students)) {
+      students = [
+        { id: 101, name: "Chandan", course: "BCA" },
+        { id: 102, name: "Rahul", course: "B.Tech" }
+      ];
+    }
+    function persist() { try { localStorage.setItem(KEY, JSON.stringify(students)); } catch (e) {} }
+    return {
+      getAll: function() { return students; },
+      get: function(id) { return students.find(function(s) { return s.id == id; }); },
+      add: function(s) {
+        var max = students.reduce(function(m, x) { return Math.max(m, x.id); }, 100);
+        s.id = max + 1; students.push(s); persist();
+      },
+      update: function(s) { persist(); },
+      remove: function(s) { students.splice(students.indexOf(s), 1); persist(); }
+    };
+  });
+
+  // ROUTES
+  app.config(function($routeProvider, $locationProvider) {
+    $locationProvider.hashPrefix("!");
+    $routeProvider
+      .when("/home",     { templateUrl: "home.html",     controller: "HomeCtrl" })
+      .when("/students", { templateUrl: "students.html", controller: "StudentListCtrl" })
+      .when("/add",      { templateUrl: "form.html",     controller: "FormCtrl" })
+      .when("/edit/:id", { templateUrl: "form.html",     controller: "FormCtrl" })
+      .otherwise({ redirectTo: "/home" });
+  });
+
+  // MAIN (navbar, active link, toast)
+  app.controller("MainCtrl", function($scope, $location, $timeout, DataService) {
+    $scope.menuOpen = false;
+    $scope.msg = "";
+    $scope.isActive = function(p) { return $location.path() === p; };
+    $scope.count = function() { return DataService.getAll().length; };
+    $scope.$on("toast", function(e, text) {
+      $scope.msg = text;
+      $timeout(function() { $scope.msg = ""; }, 2000);
+    });
+  });
+
+  app.controller("HomeCtrl", function($scope, DataService) {
+    var all = DataService.getAll();
+    $scope.total = all.length;
+    $scope.courses = new Set(all.map(function(s) { return s.course; })).size;
+    $scope.latest = all[all.length - 1] || {};
+  });
+
+  app.controller("StudentListCtrl", function($scope, DataService) {
+    $scope.students = DataService.getAll();
+    $scope.remove = function(s) {
+      if (confirm(s.name + " ko delete karna hai?")) {
+        DataService.remove(s);
+        $scope.$emit("toast", "Student deleted ✅");
+      }
+    };
+  });
+
+  // Add + Edit dono ke liye ek hi controller
+  app.controller("FormCtrl", function($scope, $routeParams, $location, DataService) {
+    $scope.courseList = ["BCA", "B.Tech", "BBA", "B.Com", "BA", "MCA"];
+    $scope.isEdit = !!$routeParams.id;
+    if ($scope.isEdit) {
+      var found = DataService.get($routeParams.id);
+      if (!found) { $location.path("/students"); return; }
+      $scope.student = found;   // direct reference, isliye update live hota hai
+    } else {
+      $scope.student = {};
+    }
+    $scope.save = function() {
+      if ($scope.isEdit) { DataService.update($scope.student); $scope.$emit("toast", "Student updated ✅"); }
+      else { DataService.add($scope.student); $scope.$emit("toast", "Student added ✅"); }
+      $location.path("/students");
+    };
+  });
+</script>
+</body>
+</html>

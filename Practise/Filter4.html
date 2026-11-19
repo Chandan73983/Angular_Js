@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+
+    <h2>LimitTo Filter Example</h2>
+
+    <!-- Text ko sirf 30 characters tak dikhayega -->
+    <p>Short Text: {{ longText | limitTo:30 }}...</p>
+
+    <ul>
+        <!-- List mein sirf pehle 2 hi products dikhayega -->
+        <li ng-repeat="p in products | limitTo:2">
+            {{ p.name }}
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            $scope.longText = "AngularJS ek JavaScript framework hai jo single page applications banane ke liye use hota hai.";
+            
+            $scope.products = [
+                { name: "Product 1" },
+                { name: "Product 2" },
+                { name: "Product 3" },
+                { name: "Product 4" }
+            ];
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngularJS Product Filters</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+   
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .controls input, .controls select {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+        .controls input:focus, .controls select:focus {
+            border-color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .no-data {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body ng-app="productApp" ng-controller="ProductController">
+
+    <div class="container">
+        <h2>Product Catalog (Search, Filter & Sort)</h2>
+
+        <!-- CONTROLS SECTION -->
+        <div class="controls">
+            <!-- 1. Search Input -->
+            <input type="text" ng-model="searchName" placeholder="Search by product name...">
+
+            <!-- 2. Category Filter -->
+            <select ng-model="selectedCategory">
+                <option value="">All Categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Footwear">Footwear</option>
+                <option value="Clothing">Clothing</option>
+            </select>
+
+            <!-- 3. Price Sorting -->
+            <select ng-model="sortOrder">
+                <option value="price">Price: Low to High</option>
+                <option value="-price">Price: High to Low</option>
+            </select>
+        </div>
+
+        <!-- PRODUCTS TABLE -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- AngularJS Magic: Filtering and Sorting inline inside ng-repeat -->
+                <tr ng-repeat="product in filteredProducts = (products | filter:{name: searchName, category: selectedCategory} | orderBy:sortOrder)">
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>₹{{ product.price | number }}</td>
+                </tr>
+                <!-- Agar koi product match nahi hota toh yeh dikhega -->
+                <tr ng-if="filteredProducts.length === 0">
+                    <td colspan="4" class="no-data">No products found matching your criteria.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ANGULARJS APP & CONTROLLER SCRIPT -->
+    <script>
+        // Module Initialization
+        var app = angular.module('productApp', []);
+
+        // Controller Logic
+        app.controller('ProductController', function($scope) {
+            // Products Array (Mock Data)
+            $scope.products = [
+                { id: 1, name: "iPhone 15", category: "Electronics", price: 79999 },
+                { id: 2, name: "Nike Air Max", category: "Footwear", price: 9999 },
+                { id: 3, name: "Samsung Galaxy S24", category: "Electronics", price: 74999 },
+                { id: 4, name: "Adidas Hoodie", category: "Clothing", price: 3499 },
+                { id: 5, name: "MacBook Air", category: "Electronics", price: 92999 },
+                { id: 6, name: "Puma Sneakers", category: "Footwear", price: 4999 }
+            ];
+
+            // Default Values Setup
+            $scope.searchName = "";
+            $scope.selectedCategory = "";
+            $scope.sortOrder = "price"; // Default Ascending Price
+        });
+    </script>
+
+</body>
+</html>

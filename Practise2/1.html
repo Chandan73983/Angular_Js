@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="mycounter">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="mycontroller">
+  <div>
+    <h2>Counter: {{count}}</h2>
+    <button ng-click="increase()"> Increase</button>
+    <button ng-click="decrease()">Decrease</button>
+<button ng-click="reset()">Reset</button>
+
+  </div>
+  <script>
+    var app=angular.module("mycounter",[]);
+    
+    app.controller("mycontroller",function($scope){
+      $scope.count=0;
+      
+      $scope.increase=function(){
+        $scope.count++
+      }
+      
+        $scope.decrease= function() {
+    $scope.count--
+  }
+  
+    $scope.reset = function() {
+    $scope.count=0
+  }
+    })
+  </script>
+</body>
+
+</html>

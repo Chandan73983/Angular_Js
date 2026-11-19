@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple ng-repeat</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        ul { list-style-type: square; background: #f9f9f9; padding: 20px 40px; border-radius: 8px; width: 200px;}
+        li { font-size: 18px; margin-bottom: 10px; color: #333; }
+    </style>
+</head>
+<body ng-controller="myCtrl">
+
+    <h2>🛒 Mere Paas Ye Fruits Hain:</h2>
+
+    <ul>
+        <!-- Yahan ng-repeat laga hai -->
+        <li ng-repeat="fruit in fruits">
+            {{ fruit }}
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            // Ye hamara Array hai
+            $scope.fruits = ["Apple 🍎", "Banana 🍌", "Mango 🥭", "Orange 🍊"];
+        });
+    </script>
+
+</body>
+</html>

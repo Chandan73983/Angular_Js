@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html ng-app="shopApp">
+
+<head>
+    <title>My Shopping App</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div ng-controller="shopCtrl">
+
+    <h1>Fashion Store</h1>
+
+    <h2>Products</h2>
+
+    <div class="product"
+         ng-repeat="p in products">
+
+        <h3>{{ p.name }}</h3>
+
+        <p>Price: {{ p.price | currency:"₹" }}</p>
+
+        <button ng-click="addToCart(p)">
+            Add To Cart
+        </button>
+
+    </div>
+
+    <hr>
+
+    <h2>My Cart ({{ cart.length }})</h2>
+
+    <div ng-repeat="item in cart">
+
+        {{ item.name }} - {{ item.price | currency:"₹" }}
+
+        <button ng-click="removeFromCart($index)">
+            Remove
+        </button>
+
+    </div>
+
+    <h3>Total: {{ getTotal() | currency:"₹" }}</h3>
+
+</div>
+
+<script>
+
+var app = angular.module("shopApp", []);
+
+app.controller("shopCtrl", function($scope) {
+
+    $scope.products = [
+
+        {name: "T-Shirt", price: 499},
+
+        {name: "Jeans", price: 999},
+
+        {name: "Shoes", price: 1499},
+
+        {name: "Jacket", price: 1999}
+
+    ];
+
+    $scope.cart = [];
+
+    $scope.addToCart = function(product) {
+
+        $scope.cart.push(product);
+
+    };
+
+    $scope.removeFromCart = function(index) {
+
+        $scope.cart.splice(index, 1);
+
+    };
+
+    $scope.getTotal = function() {
+
+        var total = 0;
+
+        angular.forEach($scope.cart, function(item) {
+
+            total += item.price;
+
+        });
+
+        return total;
+
+    };
+
+});
+
+</script>
+
+</body>
+</html>

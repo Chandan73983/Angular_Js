@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="mylist">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="mylistcontroller">
+  
+  <div>
+    <h2>List Show</h2>
+    <label>Search Students:</label>
+    <input type="text" ng-model="searchbox.name">
+    <br><br>
+    <ul>
+      <li ng-repeat="student in students | filter:searchbox">
+        <strong>Name: {{student.name}}</strong>
+        <br>
+        <strong>Course: {{student.course}}</strong>
+      </li>
+    </ul>
+  </div>
+  <script>
+    var app = angular.module("mylist",[]);
+    
+    app.controller("mylistcontroller", function($scope) {
+      
+      $scope.students = [
+        { name: "Rahul", course: "BCA" },
+        { name: "Priya", course: "B.Tech" },
+        { name: "Amit", course: "MCA" },
+        { name: "Sneha", course: "B.Sc IT" }
+      ];
+    });
+  </script>
+</body>
+
+</html>

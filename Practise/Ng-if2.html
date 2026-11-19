@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="loginApp">
+<head>
+    <meta charset="UTF-8">
+    <title>ng-if Login Example</title>
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: #f0f4f8; }
+        .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; width: 300px; }
+        input { padding: 10px; width: 80%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; background: #4F46E5; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-size: 14px; margin-top: 10px; }
+    </style>
+</head>
+
+<body ng-controller="loginCtrl">
+
+    <div class="box">
+        <!-- ========================================== -->
+        <!-- 1. LOGIN FORM (Sirf tab dikhega jab isLoggedIn FALSE ho) -->
+        <!-- ========================================== -->
+        <!-- Yahan '!' ka matlab hai NOT (nahi). Toh agar isLoggedIn false hai, toh '!isLoggedIn' true ho jayega aur form dikhega -->
+        <div ng-if="!isLoggedIn">
+            <h2>Admin Login</h2>
+            <p>Password daalein: <b>admin123</b></p>
+            
+            <input type="password" ng-model="enteredPassword" placeholder="Enter Password">
+            <br>
+            <button ng-click="checkLogin()">Login</button>
+            
+            <!-- Agar galat password daala toh error dikhega -->
+            <p class="error" ng-if="showError">❌ Galat Password! Dobara try karein.</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. WELCOME DASHBOARD (Sirf tab dikhega jab isLoggedIn TRUE ho) -->
+        <!-- ========================================== -->
+        <!-- Agar isLoggedIn true hoga, toh upar wala div delete ho jayega aur ye div naya ban jayega -->
+        <div ng-if="isLoggedIn">
+            <h2 class="success">✅ Login Successful!</h2>
+            <p>Welcome to your Dashboard, Admin.</p>
+            <button ng-click="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module('loginApp', []);
+        
+        app.controller('loginCtrl', function($scope) {
+            // Shuruat mein user login nahi hai
+            $scope.isLoggedIn = false;
+            $scope.showError = false;
+            $scope.enteredPassword = "";
+
+            // Jab login button dabayenge tab ye chalega
+            $scope.checkLogin = function() {
+                if ($scope.enteredPassword === "admin123") {
+                    // Agar password sahi hai
+                    $scope.isLoggedIn = true;
+                    $scope.showError = false;
+                } else {
+                    // Agar password galat hai
+                    $scope.showError = true;
+                }
+            };
+
+            // Logout button ke liye
+            $scope.logout = function() {
+                $scope.isLoggedIn = false;
+                $scope.enteredPassword = ""; // Input box khaali kar do
+            };
+        });
+    </script>
+
+</body>
+</html>

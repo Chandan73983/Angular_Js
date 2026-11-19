@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>ng-if Simple Example</title>
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .secret-box { background: #ffe4e6; color: #e11d48; padding: 20px; margin-top: 20px; border-radius: 8px; display: inline-block; }
+    </style>
+</head>
+
+<body ng-controller="myCtrl">
+
+    <h2>ng-if Example</h2>
+
+    <!-- Button dabane par showMessage ki value true/false hogi -->
+    <button ng-click="showMessage = !showMessage">
+        Show / Hide Secret
+    </button>
+
+    <!-- ng-if condition check karega. Agar true hai toh hi ye div banega -->
+    <div class="secret-box" ng-if="showMessage">
+        <h3>🎉 Ye ek Secret Message hai!</h3>
+    </div>
+
+    <script>
+        // AngularJS App aur Controller banaya
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            // Shuruat mein message chhupa hua hai
+            $scope.showMessage = false; 
+        });
+    </script>
+
+</body>
+</html>

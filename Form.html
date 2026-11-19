@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Registration Form</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-controller="myCtrl">
+
+    <h2>Registration Form</h2>
+
+    <form name="registerForm"
+          ng-submit="submitForm()"
+          novalidate>
+
+        <label>Name:</label><br>
+
+        <input type="text"
+               name="username"
+               ng-model="user.name"
+               ng-required="true"
+               ng-minlength="3"
+               ng-maxlength="20">
+
+        <p class="error"
+           ng-if="registerForm.username.$touched &&
+                  registerForm.username.$invalid">
+            Enter a name between 3 and 20 characters.
+        </p>
+
+        <br>
+
+        <label>Email:</label><br>
+
+        <input type="email"
+               name="email"
+               ng-model="user.email"
+               required>
+
+        <p class="error"
+           ng-if="registerForm.email.$touched &&
+                  registerForm.email.$invalid">
+            Enter a valid email.
+        </p>
+
+        <br>
+
+        <label>Password:</label><br>
+
+        <input type="password"
+               name="password"
+               ng-model="user.password"
+               required
+               ng-minlength="8">
+
+        <p class="error"
+           ng-if="registerForm.password.$touched &&
+                  registerForm.password.$invalid">
+            Password must contain at least 8 characters.
+        </p>
+
+        <br>
+
+        <button type="submit"
+                ng-disabled="registerForm.$invalid">
+            Register
+        </button>
+
+    </form>
+
+    <h3 class="success">{{ message }}</h3>
+
+</div>
+
+<script>
+
+var app = angular.module("myApp", []);
+
+app.controller("myCtrl", function($scope) {
+
+    $scope.user = {};
+
+    $scope.message = "";
+
+    $scope.submitForm = function() {
+
+        if ($scope.registerForm.$valid) {
+
+            $scope.message =
+                "Registration form is valid!";
+
+        }
+
+    };
+
+});
+
+</script>
+
+</body>
+</html>

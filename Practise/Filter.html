@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- AngularJS CDN include kiya -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<!-- ng-app se AngularJS start hota hai -->
+<body ng-app="myApp" ng-controller="myCtrl">
+
+    <h2>AngularJS Filter Example</h2>
+
+    <!-- Search Box: Jo yahan type karenge woh 'searchText' mein save hoga -->
+    <input type="text" ng-model="searchText" placeholder="Search product (e.g. Laptop)">
+
+    <ul>
+        <!-- 1. filter:searchText - List ko filter karega -->
+        <!-- 2. uppercase - Naam ko CAPITAL letters mein badal dega -->
+        <!-- 3. currency:"₹" - Price ke aage ₹ laga dega -->
+        <li ng-repeat="item in items | filter:searchText">
+            {{ item.name | uppercase }} - {{ item.price | currency:"₹" }}
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module('myApp', []);
+        
+        app.controller('myCtrl', function($scope) {
+            // Yeh hamara data hai
+            $scope.items = [
+                { name: "Laptop", price: 50000 },
+                { name: "Mobile Phone", price: 20000 },
+                { name: "T-Shirt", price: 799 },
+                { name: "Shoes", price: 1500 }
+            ];
+        });
+    </script>
+
+</body>
+</html>

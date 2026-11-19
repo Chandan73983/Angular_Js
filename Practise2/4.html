@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS Registration Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; max-width: 300px; box-sizing: border-box; }
+        button { padding: 10px 15px; cursor: pointer; background-color: #007BFF; color: white; border: none; border-radius: 4px; }
+        button:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .error { color: red; font-size: 12px; margin-top: 5px; }
+    </style>
+</head>
+<body ng-app="formApp" ng-controller="formController">
+
+    <h2>Registration Form (AngularJS)</h2>
+    
+    <!-- novalidate browser ke default validation ko rokta hai taaki Angular handle kare -->
+    <form name="regForm" ng-submit="submitForm(regForm.$valid)" novalidate>
+        
+        <!-- Name Field -->
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="userName" ng-model="user.name" required>
+            <span class="error" ng-show="regForm.userName.$touched && regForm.userName.$error.required">
+                Name field zaroori hai.
+            </span>
+        </div>
+
+        <!-- Email Field (with Validation) -->
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="userEmail" ng-model="user.email" required>
+            <span class="error" ng-show="regForm.userEmail.$touched && regForm.userEmail.$error.required">
+                Email field zaroori hai.
+            </span>
+            <span class="error" ng-show="regForm.userEmail.$error.email">
+                Sahi email address dalein.
+            </span>
+        </div>
+
+        <!-- Password Field (with Minlength 6) -->
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="userPassword" ng-model="user.password" ng-minlength="6" required>
+            <span class="error" ng-show="regForm.userPassword.$touched && regForm.userPassword.$error.required">
+                Password field zaroori hai.
+            </span>
+            <span class="error" ng-show="regForm.userPassword.$error.minlength">
+                Password kam se kam 6 characters ka hona chahiye.
+            </span>
+        </div>
+
+        <!-- Submit Button: Form invalid hone par ya submit hone ke baad disabled rahega -->
+        <button type="submit" ng-disabled="regForm.$invalid || isSubmitted">
+            {{ isSubmitted ? 'Submitting...' : 'Submit' }}
+        </button>
+    </form>
+
+    <script>
+        // AngularJS Module aur Controller Define kiya gaya hai
+        var app = angular.module('formApp', []);
+        app.controller('formController', function($scope) {
+            $scope.user = {};
+            $scope.isSubmitted = false; // Submit status track karne ke liye
+
+            $scope.submitForm = function(isValid) {
+                // Check agar poora form valid hai
+                if (isValid) {
+                    $scope.isSubmitted = true; // Button ko disabled state me dalne ke liye
+                    alert("Form successfully submit ho gaya hai! Name: " + $scope.user.name);
+                }
+            };
+        });
+    </script>
+
+</body>
+</html>

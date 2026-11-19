@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple ng-if</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        .box { background: #4CAF50; color: white; padding: 20px; margin-top: 20px; display: inline-block; border-radius: 8px;}
+    </style>
+</head>
+<body ng-controller="myCtrl">
+
+    <!-- Checkbox: Tick karne par 'show' True ho jayega, untick karne par False -->
+    <input type="checkbox" ng-model="show"> 
+    <label>Mujhe Green Box Dekhna Hai</label>
+
+    <!-- ng-if: Agar 'show' True hai, tabhi ye box screen par aayega -->
+    <div class="box" ng-if="show">
+        Ye Green Box tabhi dikhega jab Checkbox tick hoga!
+    </div>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            // Shuruat mein checkbox untick (false) hai
+            $scope.show = false; 
+        });
+    </script>
+
+</body>
+</html>

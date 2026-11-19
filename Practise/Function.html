@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html ng-app="resultApp">
+<head>
+    <title>Student Result Calculator</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .result-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+            display: block;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .error-msg {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #138496;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .result-card {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid #17a2b8;
+        }
+        .result-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .result-card p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .pass { color: green; font-weight: bold; }
+        .fail { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div ng-controller="resultCtrl" class="result-box">
+
+    <h2>Result Calculator</h2>
+
+    <!-- Form submit hone par calculateResult() function chalega -->
+    <form name="marksForm" ng-submit="calculateResult()" novalidate>
+
+        <label>Subject 1 (Out of 100):</label>
+        <input type="number" name="s1" ng-model="marks.sub1" required min="0" max="100">
+        
+        <label>Subject 2 (Out of 100):</label>
+        <input type="number" name="s2" ng-model="marks.sub2" required min="0" max="100">
+        
+        <label>Subject 3 (Out of 100):</label>
+        <input type="number" name="s3" ng-model="marks.sub3" required min="0" max="100">
+
+        <!-- Error message agar koi box khaali ho -->
+        <p class="error-msg" ng-if="marksForm.$touched && marksForm.$invalid">
+            * Please fill all marks between 0 and 100.
+        </p>
+
+        <button type="submit" ng-disabled="marksForm.$invalid">
+            Generate Result
+        </button>
+
+    </form>
+
+    <!-- Result yahan dikhega (jab tak calculate nahi hoga, yeh chhupa rahega) -->
+    <div class="result-card" ng-if="isCalculated">
+        <h3>Your Result</h3>
+        <p><strong>Total Marks:</strong> {{ total }} / 300</p>
+        <p><strong>Percentage:</strong> {{ percentage }}%</p>
+        <p><strong>Grade:</strong> {{ grade }}</p>
+        
+        <!-- Pass/Fail check ke liye class change ho rahi hai -->
+        <p>Status: <span ng-class="isPass ? 'pass' : 'fail'">{{ status }}</span></p>
+    </div>
+
+</div>
+
+<script>
+    var app = angular.module("resultApp", []);
+
+    app.controller("resultCtrl", function($scope) {
+        
+        // Form ka data
+        $scope.marks = { sub1: null, sub2: null, sub3: null };
+        
+        // Variables jo function run hone ke baad calculate honge
+        $scope.total = 0;
+        $scope.percentage = 0;
+        $scope.grade = "";
+        $scope.status = "";
+        $scope.isPass = false;
+        $scope.isCalculated = false;
+
+        // ✅ ASLI FUNCTION: Jab button dabega toh yeh calculate karega
+        $scope.calculateResult = function() {
+            if ($scope.marksForm.$valid) {
+                // 1. Total nikaalo
+                $scope.total = $scope.marks.sub1 + $scope.marks.sub2 + $scope.marks.sub3;
+                
+                // 2. Percentage nikaalo (Total / 300 * 100)
+                $scope.percentage = ($scope.total / 300) * 100;
+                
+                // 3. Grade aur Status decide karo
+                if ($scope.percentage >= 80) {
+                    $scope.grade = "A+";
+                    $scope.status = "PASS";
+                    $scope.isPass = true;
+                } else if ($scope.percentage >= 60) {
+                    $scope.grade = "A";
+                    $scope.status = "PASS";
+                    $scope.isPass = true;
+                } else if ($scope.percentage >= 33) {
+                    $scope.grade = "B";
+                    $scope.status = "PASS";
+                    $scope.isPass = true;
+                } else {
+                    $scope.grade = "Fail";
+                    $scope.status = "FAIL";
+                    $scope.isPass = false;
+                }
+
+                // 4. Result box ko screen par dikhao
+                $scope.isCalculated = true;
+            }
+        };
+    });
+</script>
+
+</body>
+</html>

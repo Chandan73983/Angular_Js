@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+
+    <h2>Date Filter Example</h2>
+
+    <!-- Date ko dd/MM/yyyy format mein badal dega (jaise 31/10/2026) -->
+    <p>Aaj ki Date: {{ today | date:'dd/MM/yyyy' }}</p>
+    
+    <!-- Time ke saath date -->
+    <p>Exact Time: {{ today | date:'medium' }}</p>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            // Aaj ki date variable mein save ki
+            $scope.today = new Date(); 
+        });
+    </script>
+</body>
+</html>

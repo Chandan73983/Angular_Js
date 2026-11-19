@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Level 1: Basic GET</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #f4f4f4; padding: 10px; margin-bottom: 5px; border-radius: 5px; }
+        button { padding: 10px 15px; cursor: pointer; }
+    </style>
+</head>
+<body ng-controller="myCtrl">
+
+    <h2>Users List</h2>
+    
+    <!-- 1. Button jo API call karega -->
+    <button ng-click="getUsers()">Load Users</button>
+
+    <!-- 2. Loading Message (Agar data aane mein time lage) -->
+    <p ng-if="isLoading">Loading data... Please wait.</p>
+
+    <!-- 3. Users ki list (ng-repeat) -->
+    <ul>
+        <li ng-repeat="u in users">
+            <strong>Name:</strong> {{ u.name }} <br>
+            <strong>Email:</strong> {{ u.email }}
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module("myApp", []);
+
+        app.controller("myCtrl", function($scope, $http) {
+            
+            $scope.users = [];
+            $scope.isLoading = false;
+
+            $scope.getUsers = function() {
+                $scope.isLoading = true;
+
+                // ✅ API Call (GET Request)
+                $http.get("https://jsonplaceholder.typicode.com/users")
+                .then(function(response) {
+                    // Success: Data mil gaya
+                    $scope.users = response.data; 
+                    $scope.isLoading = false;
+                })
+                .catch(function(error) {
+                    // Error: Agar internet band ho ya URL galat ho
+                    alert("Error: Data fetch nahi ho paya.");
+                    $scope.isLoading = false;
+                });
+            };
+
+        });
+    </script>
+</body>
+</html>

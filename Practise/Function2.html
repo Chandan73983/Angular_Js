@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html ng-app="discountApp">
+<head>
+    <title>Discount Calculator</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .calc-box {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 { text-align: center; color: #333; }
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 15px;
+            display: block;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ffccbc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3e0;
+            border-left: 5px solid #ff5722;
+            border-radius: 5px;
+        }
+        .result p { margin: 5px 0; font-size: 16px; }
+        .final-price { font-size: 22px; font-weight: bold; color: #d84315; }
+    </style>
+</head>
+<body>
+
+<div ng-controller="discountCtrl" class="calc-box">
+
+    <h2>Discount Calculator</h2>
+
+    <!-- Form Submit hone par calculate() function chalega -->
+    <form name="discountForm" ng-submit="calculate()" novalidate>
+
+        <label>Product Price (₹):</label>
+        <input type="number" 
+               name="price" 
+               ng-model="data.price" 
+               required 
+               min="1" 
+               placeholder="e.g. 1500">
+
+        <label>Discount (%):</label>
+        <input type="number" 
+               name="discount" 
+               ng-model="data.discount" 
+               required 
+               min="0" 
+               max="100" 
+               placeholder="e.g. 20">
+
+        <button type="submit" ng-disabled="discountForm.$invalid">
+            Calculate Final Price
+        </button>
+
+    </form>
+
+    <!-- Result Box (Sirf calculate function chalne ke baad dikhega) -->
+    <div class="result" ng-if="showResult">
+        <p><strong>Original Price:</strong> ₹{{ data.price }}</p>
+        <p><strong>Discount ({{ data.discount }}%):</strong> - ₹{{ discountAmount }}</p>
+        <hr>
+        <p class="final-price">Final Price: ₹{{ finalPrice }}</p>
+    </div>
+
+</div>
+
+<script>
+    var app = angular.module("discountApp", []);
+
+    app.controller("discountCtrl", function($scope) {
+        
+        // Form ka data model
+        $scope.data = { price: null, discount: null };
+        
+        // Result variables
+        $scope.discountAmount = 0;
+        $scope.finalPrice = 0;
+        $scope.showResult = false;
+
+        // ✅ MAIN FUNCTION: Calculate discount
+        $scope.calculate = function() {
+            if ($scope.discountForm.$valid) {
+                
+                // 1. Kitne paise ka discount lagega? (Price * Discount / 100)
+                $scope.discountAmount = ($scope.data.price * $scope.data.discount) / 100;
+                
+                // 2. Final price kya hoga? (Original Price - Discount Amount)
+                $scope.finalPrice = $scope.data.price - $scope.discountAmount;
+
+                // 3. Result show karo
+                $scope.showResult = true;
+            }
+        };
+    });
+</script>
+
+</body>
+</html>

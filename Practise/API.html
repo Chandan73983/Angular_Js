@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="practiceApp">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="getCtrl">
+    <h2>Task 1: Fetch Posts</h2>
+    <button ng-click="getPosts()">Load Posts</button>
+
+    <p ng-if="loading">Loading data...</p>
+
+    <ul>
+        <li ng-repeat="post in posts">
+            <strong>{{ post.title }}</strong>
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module("practiceApp", []);
+        app.controller("getCtrl", function($scope, $http) {
+            $scope.posts = [];
+            $scope.loading = false;
+
+            $scope.getPosts = function() {
+                $scope.loading = true;
+                // API Call (GET)
+                $http.get("https://jsonplaceholder.typicode.com/posts?_limit=5")
+                .then(function(response) {
+                    $scope.posts = response.data;
+                    $scope.loading = false;
+                });
+            };
+        });
+    </script>
+</body>
+</html>

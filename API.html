@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+  <title>Fashion Store</title>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  
+  <style>
+    .product {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px;
+      width: 220px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body ng-controller="productController">
+  
+  <h1>Fashion Store Products</h1>
+  
+  <p ng-if="loading">Loading products...</p>
+  
+  <p ng-if="error">
+    {{ error }}
+  </p>
+  
+  <div class="product" ng-repeat="product in products">
+    
+    <img ng-src="{{ product.image }}">
+    
+    <h3>{{ product.title }}</h3>
+    
+    <p>{{ product.price | currency:"₹" }}</p>
+    
+    <button ng-click="addToCart(product)">
+      Add to Cart
+    </button>
+    
+  </div>
+  
+  <h2>Cart: {{ cart.length }} products</h2>
+  
+  <script>
+    var app = angular.module("myApp", []);
+    
+    app.controller("productController",
+      function($scope, $http) {
+        
+        $scope.products = [];
+        $scope.cart = [];
+        $scope.loading = true;
+        $scope.error = "";
+        
+        $http.get("https://fakestoreapi.com/products")
+          .then(function(response) {
+            
+            $scope.products = response.data;
+            $scope.loading = false;
+            
+          })
+          .catch(function(error) {
+            
+            $scope.error = "Products could not be loaded.";
+            $scope.loading = false;
+            
+          });
+        
+        $scope.addToCart = function(product) {
+          
+          $scope.cart.push(product);
+          
+        };
+        
+      });
+  </script>
+  
+</body>
+
+</html>

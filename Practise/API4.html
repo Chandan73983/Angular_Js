@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AngularJS HTTP Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .loading { color: #c62828; font-weight: bold; }
+    ul { list-style-type: none; padding: 0; }
+    li { background: #f8f9fa; padding: 10px; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #c62828; }
+  </style>
+</head>
+
+<body ng-controller="chandan">
+  <h2>Search Users</h2>
+  <button ng-click="loaddata()">Click Here</button>
+  <br><br>
+  <input type="text" ng-model="searchbox" placeholder="Search any Name and Email">
+  
+  <p ng-if="loadmessage" class="loading">Loading... Please Wait....</p>
+ 
+  <ul>
+    <li ng-repeat="user in users | filter:searchbox">
+      <strong>Name:</strong> {{user.name}}<br>
+      <strong>Email:</strong> {{user.email}}
+    </li>
+  </ul>
+
+  <script>
+    
+    var app = angular.module("myapp", []);
+    
+    app.controller("chandan", function($scope, $http) {
+      $scope.users = [];
+      $scope.loadmessage = false;
+      
+      $scope.loaddata = function() {
+        
+        $scope.loadmessage = true;
+
+        $http.get("https://jsonplaceholder.typicode.com/users")
+        .then(function(response){
+          $scope.users = response.data;
+        
+          $scope.loadmessage = false;
+        }) 
+        .catch(function(error){
+          alert("Error aa gya hai!");
+          $scope.loadmessage = false;
+        });
+      };
+    });
+  </script>
+</body>
+
+</html>

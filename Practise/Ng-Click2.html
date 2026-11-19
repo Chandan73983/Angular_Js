@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="lightApp">
+<head>
+    <meta charset="UTF-8">
+    <title>ng-click Light Switch</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        
+        /* Ye box light ka kaam karega */
+        .light-box { 
+            width: 250px; height: 250px; 
+            border-radius: 50%; /* Gol banane ke liye */
+            display: flex; align-items: center; justify-content: center;
+            margin: 20px auto; border: 5px solid #333;
+            transition: 0.3s; /* Color change smooth dikhega */
+        }
+        
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; border-radius: 8px; border: none; background: #333; color: white; }
+    </style>
+</head>
+
+<body ng-controller="lightCtrl">
+
+    <h2>💡 Light Switch</h2>
+
+    <!-- ng-style: Agar isOn true hai toh background yellow, warna black -->
+    <!-- ng-if: Agar isOn true hai toh "ON" dikhao, warna "OFF" -->
+    <div class="light-box" 
+         ng-style="{ 'background-color': isOn ? 'yellow' : 'black', 'color': isOn ? 'black' : 'white' }">
+         
+        <h1 ng-if="isOn">ON 💡</h1>
+        <h1 ng-if="!isOn">OFF 🌙</h1>
+        
+    </div>
+
+    <!-- Button dabane par toggle() function chalega -->
+    <button ng-click="toggle()">Switch Toggle Karein</button>
+
+    <script>
+        var app = angular.module('lightApp', []);
+        
+        app.controller('lightCtrl', function($scope) {
+            // Shuruat mein light OFF (false) hai
+            $scope.isOn = false; 
+
+            // Jab button click hoga tab ye function chalega
+            $scope.toggle = function() {
+                // !isOn ka matlab: Agar true hai toh false kar do, agar false hai toh true kar do
+                $scope.isOn = !$scope.isOn; 
+            };
+        });
+    </script>
+
+</body>
+</html>

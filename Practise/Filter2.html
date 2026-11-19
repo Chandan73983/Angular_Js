@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+
+    <h2>Product List (Sorted by Price)</h2>
+
+    <ul>
+        <!-- orderBy:'price' se list price ke hisaab se sort ho jayegi (chhote se bade) -->
+        <li ng-repeat="p in products | orderBy:'price'">
+            {{ p.name }} - ₹{{ p.price }}
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            $scope.products = [
+                { name: "Shoes", price: 1500 },
+                { name: "Laptop", price: 50000 },
+                { name: "T-Shirt", price: 799 }
+            ];
+        });
+    </script>
+</body>
+</html>

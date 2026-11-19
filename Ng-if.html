@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- AngularJS ka CDN link lagana zaroori hai -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+
+    <h2>ng-if Example</h2>
+
+   
+    <div ng-if="!isLoggedIn">
+        <p style="color: red;">Please Login to continue</p>
+        <input type="text" placeholder="Enter Username">
+        <button ng-click="login()">Login</button>
+    </div>
+
+  
+    <div ng-if="isLoggedIn">
+        <p style="color: green;">Welcome back, Admin! 🎉</p>
+        <button ng-click="logout()">Logout</button>
+    </div>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            
+            $scope.isLoggedIn = false;
+
+            
+            $scope.login = function() {
+                $scope.isLoggedIn = true; 
+            };
+
+          
+            $scope.logout = function() {
+                $scope.isLoggedIn = false; 
+            };
+        });
+    </script>
+
+</body>
+</html>
